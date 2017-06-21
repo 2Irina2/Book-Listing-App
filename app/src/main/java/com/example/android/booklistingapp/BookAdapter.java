@@ -1,29 +1,24 @@
 package com.example.android.booklistingapp;
 
 import android.content.Context;
-import android.content.Loader;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
-
+import com.squareup.picasso.Picasso;
 import java.util.List;
 
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+import static com.example.android.booklistingapp.R.id.preview;
 
 /**
  * Created by irina on 21.06.2017.
  */
 
-public class BookAdapter extends ArrayAdapter<Book> implements LoaderCallbacks<ImageView> {
+public class BookAdapter extends ArrayAdapter<Book>{
 
     private static final String LOG_TAG = BookAdapter.class.getSimpleName();
 
@@ -48,11 +43,7 @@ public class BookAdapter extends ArrayAdapter<Book> implements LoaderCallbacks<I
 
         preview = (ImageView) listItemView.findViewById(R.id.preview);
         thumbnailUrl = currentBook.getImageUrl();
-
-        Log.e(LOG_TAG, "IMAGE URL SET = " + thumbnailUrl);
-
-        LoaderManager loaderManager = getLoaderManager();
-        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+        Picasso.with(getContext()).load(currentBook.getImageUrl()).into(preview);
 
         TextView title = (TextView) listItemView.findViewById(R.id.title);
         title.setText(currentBook.getTitle());
@@ -65,24 +56,5 @@ public class BookAdapter extends ArrayAdapter<Book> implements LoaderCallbacks<I
 
         return listItemView;
 
-    }
-
-    private static final int EARTHQUAKE_LOADER_ID = 1;
-
-    @Override
-    public Loader<ImageView> onCreateLoader(int id, Bundle args) {
-        return new ThumbnailLoader(getContext(), thumbnailUrl, preview);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<ImageView> loader, ImageView data) {
-        if(data != null){
-            preview = data;
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ImageView> loader) {
-        return;
     }
 }

@@ -3,4 +3,8 @@
 
     <string name="search_criteria">Type book name/author</string>
     <string name="search">Search</string>
+
+    <string name="initial_text">Please type in a key word and press the button</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="no_book_found">No books were found :(</string>
 </resources>
