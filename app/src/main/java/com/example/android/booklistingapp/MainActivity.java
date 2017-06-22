@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         adapter = new BookAdapter(this, new ArrayList<Book>());
         listview.setAdapter(adapter);
 
-        Button searchButton = (Button) findViewById(R.id.search);
+        final Button searchButton = (Button) findViewById(R.id.search);
 
         final LoaderManager loaderManager = getLoaderManager();
 
@@ -64,9 +64,10 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                     progressBar.setVisibility(View.VISIBLE);
                     emptyStateView.setVisibility(View.GONE);
                     EditText searchField = (EditText) findViewById(R.id.text_field);
-                    String searchTerm = searchField.getText().toString();
+                    String searchTerm = searchField.getText().toString().trim();
+                    searchTerm = searchTerm.replace(" ", "+");
                     Log.e(LOG_TAG, "Search term is: " + searchTerm);
-                    requestUrl = "https://www.googleapis.com/books/v1/volumes?q=" + searchTerm + "&key=AIzaSyBJBxpkAXAYqJ1egmHdLnhzUS1Psy1yIDI";
+                    requestUrl = "https://www.googleapis.com/books/v1/volumes?q=" + searchTerm;
                     loaderManager.restartLoader(BOOK_LOADER_ID, null, MainActivity.this);
                 }
                 else{
