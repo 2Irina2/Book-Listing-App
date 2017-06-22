@@ -103,14 +103,26 @@ public class QueryUtils {
                 JSONObject bookItem = bookArray.getJSONObject(i);
                 JSONObject bookInfo = bookItem.getJSONObject("volumeInfo");
                 String bookTitle = bookInfo.getString("title");
-                String bookSubtitle = bookInfo.getString("subtitle");
+                String bookSubtitle;
+                if(bookInfo.has("subtitle")){
+                    bookSubtitle = bookInfo.getString("subtitle");
+                }
+                else{
+                    bookSubtitle = "";
+                }
                 String bookUrl = bookInfo.getString("infoLink");
                 JSONObject bookImages = bookInfo.getJSONObject("imageLinks");
                 String bookImageUrl = bookImages.getString("smallThumbnail");
-                JSONArray bookAuthors = bookInfo.getJSONArray("authors");
-                String authorsList = bookAuthors.getString(0);
-                for(int j = 1; j < bookAuthors.length(); j++){
-                    authorsList = authorsList + ", " + bookAuthors.getString(j);
+                String authorsList;
+                if(bookInfo.has("authors")){
+                    JSONArray bookAuthors = bookInfo.getJSONArray("authors");
+                    authorsList = bookAuthors.getString(0);
+                    for(int j = 1; j < bookAuthors.length(); j++){
+                        authorsList = authorsList + "\n" + bookAuthors.getString(j);
+                    }
+                }
+                else{
+                    authorsList = "Unknown";
                 }
 
                 Book book = new Book(bookTitle, bookSubtitle, authorsList, bookUrl, bookImageUrl);

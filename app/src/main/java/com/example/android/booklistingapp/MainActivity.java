@@ -37,8 +37,13 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     public static String requestUrl;
 
+    public String searchTerm;
+
+    final LoaderManager loaderManager = getLoaderManager();
+
     TextView emptyStateView;
     ProgressBar progressBar;
+    EditText searchField;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,16 +60,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         final Button searchButton = (Button) findViewById(R.id.search);
 
-        final LoaderManager loaderManager = getLoaderManager();
-
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(hasInternetAccess()) {
                     progressBar.setVisibility(View.VISIBLE);
                     emptyStateView.setVisibility(View.GONE);
-                    EditText searchField = (EditText) findViewById(R.id.text_field);
-                    String searchTerm = searchField.getText().toString().trim();
+                    searchField = (EditText) findViewById(R.id.text_field);
+                    searchTerm = searchField.getText().toString().trim();
                     searchTerm = searchTerm.replace(" ", "+");
                     Log.e(LOG_TAG, "Search term is: " + searchTerm);
                     requestUrl = "https://www.googleapis.com/books/v1/volumes?q=" + searchTerm;
@@ -125,4 +128,21 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         return isConnected;
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //searchTerm = searchField.getText().toString().trim().replace(" ", "+");
+        outState.putString("query", searchTerm);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        progressBar.setVisibility(View.VISIBLE);
+        emptyStateView.setVisibility(View.GONE);
+        searchTerm = savedInstanceState.getString("query");
+        loaderManager.restartLoader(BOOK_LOADER_ID, null, MainActivity.this);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 }
+
